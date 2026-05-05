@@ -51,8 +51,9 @@ export type FileHistoryState = {
   snapshotSequence: number
 }
 
-// Disabled: file checkpointing causes unbounded memory growth (100 snapshots × full file backups).
-// See heap snapshot analysis — re-enable only after switching to incremental diffs.
+// Throttled: file checkpointing remains enabled (gated by fileHistoryEnabled())
+// but capped to mitigate unbounded memory growth (full file backups x N snapshots).
+// See heap snapshot analysis; only raise this cap after switching to incremental diffs.
 const MAX_SNAPSHOTS = 20
 export type DiffStats =
   | {

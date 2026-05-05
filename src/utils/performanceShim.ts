@@ -145,10 +145,11 @@ const shim = {
     return original.timeOrigin
   },
   get onresourcetimingbufferfull() {
-    return (original as any).onresourcetimingbufferfull
+    return (original as Performance & { onresourcetimingbufferfull?: unknown })
+      .onresourcetimingbufferfull
   },
-  set onresourcetimingbufferfull(_v: any) {
-    // no-op — prevent accumulation
+  set onresourcetimingbufferfull(_v: unknown) {
+    // no-op to prevent accumulation
   },
   toJSON() {
     return original.toJSON()
@@ -161,8 +162,11 @@ const shim = {
  * native Performance reference.
  */
 export function installPerformanceShim(): void {
-  if ((globalThis as any).__performanceShimInstalled) return
-  ;(globalThis as any).__performanceShimInstalled = true
+  const g = globalThis as typeof globalThis & {
+    __performanceShimInstalled?: boolean
+  }
+  if (g.__performanceShimInstalled) return
+  g.__performanceShimInstalled = true
   globalThis.performance = shim
 }
 
