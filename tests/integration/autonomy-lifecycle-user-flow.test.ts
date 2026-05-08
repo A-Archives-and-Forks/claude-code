@@ -1,3 +1,8 @@
+// NOTE: isolation flake, not pollution. The subprocess Bun.spawn'd in
+// runAutonomyCli does not inherit the test runner's tsconfig path-alias
+// resolution, so it reports `Cannot find module 'src/bootstrap/state.js'
+// from src/utils/startupProfiler.ts` even when this file is run alone.
+// Out of scope for the test-flake-fix pass; needs subprocess-launcher rework.
 import { afterEach, beforeEach, describe, expect, test } from 'bun:test'
 import { existsSync, mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
