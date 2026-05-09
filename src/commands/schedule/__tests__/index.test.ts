@@ -24,8 +24,8 @@ beforeAll(async () => {
 })
 
 describe('scheduleCommand metadata', () => {
-  test('name is "schedule"', () => {
-    expect(cmd.name).toBe('schedule')
+  test('name is "triggers" (renamed from "schedule" to avoid bundled-skill collision)', () => {
+    expect(cmd.name).toBe('triggers')
   })
 
   test('type is local-jsx', () => {
@@ -36,9 +36,11 @@ describe('scheduleCommand metadata', () => {
     expect(cmd.isEnabled?.()).toBe(true)
   })
 
-  test('aliases include cron and triggers', () => {
+  test('aliases include cron (triggers is now the primary name)', () => {
     expect(cmd.aliases).toContain('cron')
-    expect(cmd.aliases).toContain('triggers')
+    // 'triggers' moved to primary `name`; the bundled skill /schedule
+    // owns the 'schedule' slot upstream so we don't alias to it either.
+    expect(cmd.aliases).not.toContain('schedule')
   })
 
   test('bridgeSafe is false', () => {
